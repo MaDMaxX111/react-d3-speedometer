@@ -5,6 +5,7 @@ import {
   format as d3Format,
 } from "d3"
 import { calculateSegmentLabelCount } from "../util/"
+import PropTypes from "prop-types";
 
 // default props
 export const DEFAULT_PROPS = {
@@ -51,6 +52,9 @@ export const DEFAULT_PROPS = {
   // specifies the style of the placeholder for current value
   // change it some other format like "#{value}" and use it in current value text as => "Current Value: #{value}"
   currentValuePlaceholderStyle: "${value}",
+  // padding between sectors
+  paddingSegment: false,
+  growSegmentOnHover: false,
 }
 
 // default config
@@ -107,6 +111,8 @@ export const getConfig = ({ PROPS, parentWidth, parentHeight }) => {
     currentValueText: PROPS.currentValueText,
     // placeholder style for 'currentValue'
     currentValuePlaceholderStyle: PROPS.currentValuePlaceholderStyle,
+    // padding between sectors
+    paddingSegment: PROPS.paddingSegment,
   }
 
   return Object.assign({}, DEFAULT_CONFIG, config)

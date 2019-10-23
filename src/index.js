@@ -119,6 +119,9 @@ ReactSpeedometer.propTypes = {
   currentValueText: PropTypes.string.isRequired,
   // placeholder style for current value
   currentValuePlaceholderStyle: PropTypes.string.isRequired,
+  // padding between sectors
+  paddingSegment: PropTypes.bool,
+  growSegmentOnHover: PropTypes.bool,
 }
 
 // define the default proptypes

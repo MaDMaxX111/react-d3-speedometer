@@ -1,7 +1,7 @@
 import {
   select as d3Select,
   line as d3Line,
-  curveMonotoneX as d3CurveMonotoneX,
+  curveMonotoneX as d3CurveMonotoneX, selectAll
 } from "d3"
 import {
   centerTranslation,
@@ -16,6 +16,7 @@ import {
   configureTicks,
   configureTickData,
   configureScale,
+  configureStroke,
 } from "../config/configure"
 
 export const update = ({ d3_refs, newValue, config }) => {
@@ -61,6 +62,7 @@ function _renderSVG({ container, config }) {
 function _renderArcs({ config, svg, centerTx }) {
   const tickData = configureTickData(config)
   const arc = configureArc(config)
+  const strokeWidth = configureStroke(config)
 
   let arcs = svg
     .append("g")
@@ -82,6 +84,70 @@ function _renderArcs({ config, svg, centerTx }) {
         : config.arcColorFn(d * i)
     })
     .attr("d", arc)
+    .attr("stroke", "#fff")
+    .attr("stroke-width", strokeWidth).on("mouseenter", (d, i, groups) => {
+      const el = d3Select(groups[i]);
+      el.classed('hover', true);
+    })
+
+  // var slices = wrap.select('.nv-pie').selectAll('.nv-slice').data(pie);
+  // var pieLabels = wrap.select('.nv-pieLabels').selectAll('.nv-label').data(pie);
+  //
+  // slices.exit().remove();
+  // pieLabels.exit().remove();
+  //
+  // var ae = slices.enter().append('g');
+  // ae.attr('class', 'nv-slice');
+  // ae.on('mouseover', function(d, i) {
+  //   d3.select(this).classed('hover', true);
+  //   if (growOnHover) {
+  //     d3.select(this).select("path").transition()
+  //         .duration(70)
+  //         .attr("d", arcsOver[i]);
+  //   }
+  //   dispatch.elementMouseover({
+  //     data: d.data,
+  //     index: i,
+  //     color: d3.select(this).style("fill"),
+  //     percent: (d.endAngle - d.startAngle) / (2 * Math.PI)
+  //   });
+  // });
+  // ae.on('mouseout', function(d, i) {
+  //   d3.select(this).classed('hover', false);
+  //   if (growOnHover) {
+  //     d3.select(this).select("path").transition()
+  //         .duration(50)
+  //         .attr("d", arcs[i]);
+  //   }
+  //   dispatch.elementMouseout({data: d.data, index: i});
+  // });
+  // ae.on('mousemove', function(d, i) {
+  //   dispatch.elementMousemove({data: d.data, index: i});
+  // });
+  // ae.on('click', function(d, i) {
+  //   var element = this;
+  //   dispatch.elementClick({
+  //     data: d.data,
+  //     index: i,
+  //     color: d3.select(this).style("fill"),
+  //     event: d3.event,
+  //     element: element
+  //   });
+  // });
+  // ae.on('dblclick', function(d, i) {
+  //   dispatch.elementDblClick({
+  //     data: d.data,
+  //     index: i,
+  //     color: d3.select(this).style("fill")
+  //   });
+  // });
+  //
+  // slices.attr('fill', function(d,i) { return color(d.data, i); });
+  // slices.attr('stroke', function(d,i) { return color(d.data, i); });
+  //
+  // var paths = ae.append('path').each(function(d) {
+  //   this._current = d;
+  // });
 }
 
 function _renderLabels({ config, svg, centerTx, r }) {
