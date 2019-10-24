@@ -86,41 +86,22 @@ function _configureStroke(config) {
 
 function _configureArcHover(config) {
 
-  // var arc = d3.svg.arc().outerRadius(arcsRadiusOuter[i]);
-  // var arcOver = d3.svg.arc().outerRadius(arcsRadiusOuter[i] + 5);
-  //
-  // if (startAngle !== false) {
-  //   arc.startAngle(startAngle);
-  //   arcOver.startAngle(startAngle);
-  // }
-  // if (endAngle !== false) {
-  //   arc.endAngle(endAngle);
-  //   arcOver.endAngle(endAngle);
-  // }
-  // if (donut) {
-  //   arc.innerRadius(arcsRadiusInner[i]);
-  //   arcOver.innerRadius(arcsRadiusInner[i]);
-  // }
-  //
-  // if (arc.cornerRadius && cornerRadius) {
-  //   arc.cornerRadius(cornerRadius);
-  //   arcOver.cornerRadius(cornerRadius);
-  // }
   const tickData = configureTickData(config)
 
   const range = config.maxAngle - config.minAngle
   const r = config.width / 2
 
   const arc = d3Arc()
-      .innerRadius(r - config.ringWidth - config.ringInset + 10)
-      .outerRadius(r - config.ringInset +10)
+      .innerRadius(r - config.ringWidth - config.ringInset)
+      .outerRadius(r - config.ringInset)
       .startAngle((d, i) => {
-        const ratio = sumArrayTill(tickData, i) * 10;
+        const ratio = sumArrayTill(tickData, i)
         return deg2rad(config.minAngle + ratio * range)
       })
       .endAngle((d, i) => {
         const ratio = sumArrayTill(tickData, i + 1)
         return deg2rad(config.minAngle + ratio * range)
       })
+
   return arc
 }

@@ -17,6 +17,7 @@ import {
   configureTickData,
   configureScale,
   configureStroke,
+  configureArcHover,
 } from "../config/configure"
 
 export const update = ({ d3_refs, newValue, config }) => {
@@ -62,6 +63,7 @@ function _renderSVG({ container, config }) {
 function _renderArcs({ config, svg, centerTx }) {
   const tickData = configureTickData(config)
   const arc = configureArc(config)
+  const arcHover = configureArcHover(config)
   const strokeWidth = configureStroke(config)
 
   let arcs = svg
@@ -85,10 +87,26 @@ function _renderArcs({ config, svg, centerTx }) {
     })
     .attr("d", arc)
     .attr("stroke", "#fff")
-    .attr("stroke-width", strokeWidth).on("mouseenter", (d, i, groups) => {
-      const el = d3Select(groups[i]);
-      el.classed('hover', true);
-    })
+    .attr("stroke-width", strokeWidth)
+
+    if (config.growSegmentOnHover) {
+      arcs
+          .selectAll("path")
+          .on("mouseenter", (d, i, groups) => {
+            const el = d3Select(groups[i]);
+            el.classed('hover', true);
+            el.transition()
+                .duration(70)
+                .attr("d", arcHover);
+          })
+          .on("mouseout", (d, i, groups) => {
+            const el = d3Select(groups[i]);
+            el.classed('hover', false);
+            el.transition()
+                .duration(70)
+                .attr("d", arc);
+          })
+    }
 
   // var slices = wrap.select('.nv-pie').selectAll('.nv-slice').data(pie);
   // var pieLabels = wrap.select('.nv-pieLabels').selectAll('.nv-label').data(pie);

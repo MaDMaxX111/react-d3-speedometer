@@ -113,6 +113,7 @@ export const getConfig = ({ PROPS, parentWidth, parentHeight }) => {
     currentValuePlaceholderStyle: PROPS.currentValuePlaceholderStyle,
     // padding between sectors
     paddingSegment: PROPS.paddingSegment,
+    growSegmentOnHover: PROPS.growSegmentOnHover,
   }
 
   return Object.assign({}, DEFAULT_CONFIG, config)
