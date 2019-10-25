@@ -315,11 +315,31 @@ storiesOf("react-d3-speedometer", module)
             <div>
                 <div>
                     <ReactSpeedometer
+                        maxValue={500}
+                        value={473}
                         growSegmentOnHover={true}
                         paddingSegment={true}
-                        maxSegmentLabels={12}
-                        segments={3}
-                        value={470}
+                        segments={10}
+                        segmentColors={["#FF9933", "#ECEFF4", "#138808"]}
+                        needleColor="#000080"
+                    />
+                </div>
+            </div>
+        ),
+        {source: true, inline: true, header: true}
+    )
+    .add(
+        "Labels On Hover segments",
+        () => (
+            <div>
+                <div>
+                    <ReactSpeedometer
+                        maxValue={500}
+                        value={473}
+                        growSegmentOnHover={true}
+                        segmentLabels={['Label 1', 'Label 2', 'Label 3', 'Label 4']}
+                        paddingSegment={true}
+                        segments={10}
                         segmentColors={["#FF9933", "#ECEFF4", "#138808"]}
                         needleColor="#000080"
                     />

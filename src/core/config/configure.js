@@ -15,6 +15,7 @@ export const configureTickData = memoizeOne(_configureTickData)
 export const configureArc = memoizeOne(_configureArc)
 export const configureStroke = memoizeOne(_configureStroke)
 export const configureArcHover = memoizeOne(_configureArcHover)
+export const configureTooltipLabels = memoizeOne(_configureTooltipLabels)
 
 function _configureScale(config) {
   return calculateScale({
@@ -61,17 +62,19 @@ function _configureArc(config) {
   const range = config.maxAngle - config.minAngle
   const r = config.width / 2
 
-  const arc = d3Arc()
-    .innerRadius(r - config.ringWidth - config.ringInset)
-    .outerRadius(r - config.ringInset)
-    .startAngle((d, i) => {
-      const ratio = sumArrayTill(tickData, i)
-      return deg2rad(config.minAngle + ratio * range)
-    })
-    .endAngle((d, i) => {
-      const ratio = sumArrayTill(tickData, i + 1)
-      return deg2rad(config.minAngle + ratio * range)
-    })
+  const arc = (index = null) => {
+    return d3Arc()
+        .innerRadius(r - config.ringWidth - config.ringInset)
+        .outerRadius(r - config.ringInset)
+        .startAngle((d, i) => {
+          const ratio = sumArrayTill(tickData, index || i)
+          return deg2rad(config.minAngle + ratio * range)
+        })
+        .endAngle((d, i) => {
+          const ratio = sumArrayTill(tickData, (index || i) + 1)
+          return deg2rad(config.minAngle + ratio * range)
+        })
+  }
 
   return arc
 }
@@ -91,17 +94,34 @@ function _configureArcHover(config) {
   const range = config.maxAngle - config.minAngle
   const r = config.width / 2
 
-  const arc = d3Arc()
-      .innerRadius(r - config.ringWidth - config.ringInset)
-      .outerRadius(r - config.ringInset)
-      .startAngle((d, i) => {
-        const ratio = sumArrayTill(tickData, i)
-        return deg2rad(config.minAngle + ratio * range)
-      })
-      .endAngle((d, i) => {
-        const ratio = sumArrayTill(tickData, i + 1)
-        return deg2rad(config.minAngle + ratio * range)
-      })
+  const arc = (index) => {
+    return d3Arc()
+        .innerRadius(r - config.ringWidth - config.ringInset - 5)
+        .outerRadius(r - config.ringInset + 5)
+        .startAngle(() => {
+          const ratio = sumArrayTill(tickData, index)
+          return deg2rad(config.minAngle + ratio * range)
+        })
+        .endAngle(() => {
+          const ratio = sumArrayTill(tickData, index + 1)
+          return deg2rad(config.minAngle + ratio * range)
+        })
+  }
 
   return arc
+}
+
+function _configureTooltipLabels(config) {
+  const { segmentLabels } = config;
+  const label = (index) => {
+    if (typeof segmentLabels[index] === 'undefined' || segmentLabels[index] === null) return null;
+    let html = '<span>' +
+        '<span class="legend-color-guide">' +
+        '<span class="key">' + segmentLabels[index] + '</span>'
+        '</span>' +
+        '</span>'
+    return html
+  }
+
+  return label
 }

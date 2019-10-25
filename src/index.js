@@ -122,6 +122,7 @@ ReactSpeedometer.propTypes = {
   // padding between sectors
   paddingSegment: PropTypes.bool,
   growSegmentOnHover: PropTypes.bool,
+  segmentLabels: PropTypes.arrayOf(PropTypes.string),
 }
 
 // define the default proptypes

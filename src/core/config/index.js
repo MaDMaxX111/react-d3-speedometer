@@ -55,6 +55,7 @@ export const DEFAULT_PROPS = {
   // padding between sectors
   paddingSegment: false,
   growSegmentOnHover: false,
+  segmentLabels: [],
 }
 
 // default config
@@ -114,6 +115,7 @@ export const getConfig = ({ PROPS, parentWidth, parentHeight }) => {
     // padding between sectors
     paddingSegment: PROPS.paddingSegment,
     growSegmentOnHover: PROPS.growSegmentOnHover,
+    segmentLabels: PROPS.segmentLabels,
   }
 
   return Object.assign({}, DEFAULT_CONFIG, config)
