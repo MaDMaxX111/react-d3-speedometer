@@ -10,6 +10,7 @@ import {
   calculateNeedleHeight,
   formatCurrentValueText,
   sumArrayTill,
+  getInnerRadius,
 } from "../util"
 import { getNeedleTransition } from "../util/get-needle-transition"
 import {
@@ -33,14 +34,19 @@ export const update = ({d3_refs, newValue, config}) => {
   const ratio = scale(newValue)
   const range = config.maxAngle - config.minAngle
 
-  const newAngle = config.minAngle + ratio * range
+  let newAngle = config.minAngle + ratio * range
+  if (newAngle < config.minAngle) {
+    newAngle = config.minAngle - 10;
+  } else if (newAngle > config.maxAngle) {
+    newAngle = config.maxAngle + 10;
+  }
+
   // update the pointer
   d3_refs.pointer
       .transition()
       .duration(config.needleTransitionDuration)
       .ease(getNeedleTransition(config.needleTransition))
       .attr("transform", `rotate(${newAngle})`)
-
   d3_refs.current_value_text.text(formatCurrentValueText(newValue, config))
 }
 
@@ -73,18 +79,13 @@ function _renderArcs({config, svg, centerTx}) {
   const arc = configureArc(config)
   const arcHover = configureArcHover(config)
   const strokeWidth = configureStroke(config)
-  const htmlLabels = configureTooltipLabels(config)
 
-  const toolTip = _initTooltip({parent: svg.node().parentNode})
-  const onShowTooltip = showTooltip(toolTip)
-  const onHideTooltip = hideTooltip(toolTip)
-  const onMoveTooltip = moveTooltip(toolTip)
+  const segmentsColor = [];
 
   let arcs = svg
       .append("g")
       .attr("class", "arc")
       .attr("transform", centerTx)
-
   arcs
       .selectAll("path")
       .data(tickData)
@@ -92,57 +93,91 @@ function _renderArcs({config, svg, centerTx}) {
       .append("path")
       .attr("class", "speedo-segment")
       .attr("fill", (d, i) => {
+        let color = null;
         if (config.customSegmentStops.length === 0) {
-          return config.arcColorFn(d * i)
+          color = config.arcColorFn(d * i)
+        } else {
+          color = config.segmentColors && config.segmentColors[i]
+              ? config.segmentColors[i]
+              : config.arcColorFn(d * i)
         }
-        return config.segmentColors && config.segmentColors[i]
-            ? config.segmentColors[i]
-            : config.arcColorFn(d * i)
+        segmentsColor.push(color);
+        return color
       })
       .attr("d", arc())
       .attr("stroke", "#fff")
       .attr("stroke-width", strokeWidth)
 
-  if (config.growSegmentOnHover) {
+  if (config.growSegmentOnHover || config.segmentLabels.length) {
+
+    const toolTip = _initTooltip({parent: svg.node().parentNode})
+    const onShowTooltip = showTooltip(toolTip)
+    const onHideTooltip = hideTooltip(toolTip)
+    const onMoveTooltip = moveTooltip(toolTip)
+    const htmlLabels = configureTooltipLabels(config, segmentsColor)
+
+    const useGrowSegmentOnHover = !!config.growSegmentOnHover;
+    const useTooltips = config.segmentLabels.length > 0;
+
+    const onMouseenter = (d, i, groups) => {
+      if (useGrowSegmentOnHover){
+        const el = d3Select(groups[i]);
+        el.classed('hover', true);
+        el.transition()
+            .duration(70)
+            .attr("d", arcHover(i))
+      }
+
+      if (useTooltips) {
+        const html = htmlLabels(i)
+        html && onShowTooltip(html)
+      }
+
+    }
+
+    const onMouseout = (d, i, groups) => {
+      if (useGrowSegmentOnHover) {
+        const el = d3Select(groups[i]);
+        el.classed('hover', false);
+        el.transition()
+            .duration(70)
+            .attr("d", arc(i))
+      }
+
+      if (useTooltips) {
+        onHideTooltip()
+      }
+
+    }
+
+    const onMousemove = (d, i, groups) => {
+      if (useTooltips) {
+        onMoveTooltip(svg.node().parentNode)
+      }
+    }
+
     arcs
         .selectAll("path")
-        .on("mouseenter", (d, i, groups) => {
-          const el = d3Select(groups[i]);
-          el.classed('hover', true);
-          el.transition()
-              .duration(70)
-              .attr("d", arcHover(i))
-        })
-        .on("mouseout", (d, i, groups) => {
-          const el = d3Select(groups[i]);
-          el.classed('hover', false);
-          el.transition()
-              .duration(70)
-              .attr("d", arc(i))
-        })
+        .on("mouseenter", onMouseenter)
+        .on("mouseout", onMouseout)
+        .on("mousemove", onMousemove)
   }
 
-  if (config.segmentLabels.length) {
-    arcs
-        .selectAll("path")
-        .on("mouseenter", (d, i, groups) => {
-          onShowTooltip()
-        })
-        .on("mouseout", (d, i, groups) => {
-          onHideTooltip()
-        })
-        .on("mousemove", (d, i, groups) => {
-          const html = htmlLabels(i)
-          html && onMoveTooltip(svg.node().parentNode, html)
-        })
-  }
 }
 
 function _renderLabels({config, svg, centerTx, r}) {
+
   const ticks = configureTicks(config)
   const tickData = configureTickData(config)
   const scale = configureScale(config)
   const range = config.maxAngle - config.minAngle
+
+  const strokeWidth = configureStroke(config)
+  r = r - strokeWidth;
+
+  if (config.positionLabel === 'inner') {
+    r = getInnerRadius(config) + strokeWidth
+  }
 
   let lg = svg
       .append("g")
@@ -170,6 +205,7 @@ function _renderLabels({config, svg, centerTx, r}) {
       .style("font-weight", "bold")
       // .style("fill", "#666");
       .style("fill", config.textColor)
+      // .style("writing-mode", "tb")
 }
 
 function _renderCurrentValueText({config, svg}) {
@@ -222,11 +258,12 @@ function _renderNeedle({config, svg, r, centerTx}) {
 
 function _initTooltip({parent}) {
   d3Select(parent).style("position", "relative")
-  return d3Select(parent).append("div")
+  return d3Select(parent).append("span")
       .style("opacity", 0)
       .style("background-color", "rgba(255,255,255,.8)")
       .style("border", "1px solid rgba(0,0,0,.5)")
       .style("border-radius", "4px")
       .style("padding", "5px")
       .style("position", "absolute")
+      .style("display", "block")
 }

@@ -140,3 +140,7 @@ export function centerTranslation(r) {
 export function getRadius(config) {
   return config.width / 2
 }
+
+export function getInnerRadius(config) {
+  return config.ringWidth
+}

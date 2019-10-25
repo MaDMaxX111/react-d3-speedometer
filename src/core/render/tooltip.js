@@ -4,8 +4,9 @@ import {
 } from "d3"
 
 export const showTooltip = (Tooltip) => {
-    return () => {
-        Tooltip
+    return (htmlContent = null) => {
+        htmlContent && Tooltip
+            .html(htmlContent)
             .style("opacity", 1)
         d3Select(this)
             .style("stroke", "black")
@@ -13,10 +14,9 @@ export const showTooltip = (Tooltip) => {
     }
 }
 export const moveTooltip = (Tooltip) => {
-    return (d, htmlContent = 'span') => {
+    return (d) => {
         const [mouseLeft, mouseTop] = d3Mouse(d)
         Tooltip
-            .html(htmlContent)
             .style("left", (mouseLeft + 20) + "px")
             .style("top", (mouseTop - 10) + "px")
     }

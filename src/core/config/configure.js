@@ -111,15 +111,15 @@ function _configureArcHover(config) {
   return arc
 }
 
-function _configureTooltipLabels(config) {
+function _configureTooltipLabels(config, segmentsColor) {
   const { segmentLabels } = config;
   const label = (index) => {
     if (typeof segmentLabels[index] === 'undefined' || segmentLabels[index] === null) return null;
-    let html = '<span>' +
-        '<span class="legend-color-guide">' +
-        '<span class="key">' + segmentLabels[index] + '</span>'
-        '</span>' +
+    let html = '<span style="display: flex;">' +
+        '<span class="legend-color-guide" style="background-color: ' + segmentsColor[index] + '; width: 15px; height: 15px; border: 1px solid #999; display: inline-block; margin-right: 5px;"></span>' +
+        '<span class="key">' + segmentLabels[index] + '</span>' +
         '</span>'
+
     return html
   }
 

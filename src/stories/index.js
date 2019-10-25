@@ -337,7 +337,69 @@ storiesOf("react-d3-speedometer", module)
                         maxValue={500}
                         value={473}
                         growSegmentOnHover={true}
-                        segmentLabels={['Label 1', 'Label 2', 'Label 3', 'Label 4']}
+                        segmentLabels={['Label 1', 'Label 2', 'Label 3', 'Label 4', 'Label 5', 'Label 6', 'Label 7', 'Label 8']}
+                        paddingSegment={true}
+                        segments={10}
+                        segmentColors={["#FF9933", "#ECEFF4", "#138808"]}
+                        needleColor="#000080"
+                    />
+                </div>
+            </div>
+        ),
+        {source: true, inline: true, header: true}
+    )
+    .add(
+        "Position Segment Labels",
+        () => (
+            <div>
+                <div>
+                    <ReactSpeedometer
+                        positionLabel={'inner'}
+                        maxValue={500}
+                        value={473}
+                        growSegmentOnHover={true}
+                        segmentLabels={['Label 1', 'Label 2', 'Label 3', 'Label 4', 'Label 5', 'Label 6', 'Label 7', 'Label 8']}
+                        paddingSegment={true}
+                        segments={10}
+                        segmentColors={["#FF9933", "#ECEFF4", "#138808"]}
+                        needleColor="#000080"
+                    />
+                    <ReactSpeedometer
+                        positionLabel={'outer'}
+                        maxValue={500}
+                        value={473}
+                        growSegmentOnHover={true}
+                        segmentLabels={['Label 1', 'Label 2', 'Label 3', 'Label 4', 'Label 5', 'Label 6', 'Label 7', 'Label 8']}
+                        paddingSegment={true}
+                        segments={10}
+                        segmentColors={["#FF9933", "#ECEFF4", "#138808"]}
+                        needleColor="#000080"
+                    />
+                </div>
+            </div>
+        ),
+        {source: true, inline: true, header: true}
+    )
+    .add(
+        "Value less && more limit",
+        () => (
+            <div>
+                <div>
+                    <ReactSpeedometer
+                        maxValue={500}
+                        value={-100}
+                        growSegmentOnHover={true}
+                        segmentLabels={['Label 1', 'Label 2', 'Label 3', 'Label 4', 'Label 5', 'Label 6', 'Label 7', 'Label 8']}
+                        paddingSegment={true}
+                        segments={10}
+                        segmentColors={["#FF9933", "#ECEFF4", "#138808"]}
+                        needleColor="#000080"
+                    />
+                    <ReactSpeedometer
+                        maxValue={500}
+                        value={1100}
+                        growSegmentOnHover={true}
+                        segmentLabels={['Label 1', 'Label 2', 'Label 3', 'Label 4', 'Label 5', 'Label 6', 'Label 7', 'Label 8']}
                         paddingSegment={true}
                         segments={10}
                         segmentColors={["#FF9933", "#ECEFF4", "#138808"]}
