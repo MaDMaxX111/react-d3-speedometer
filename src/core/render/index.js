@@ -184,6 +184,8 @@ function _renderLabels({config, svg, centerTx, r}) {
       .attr("class", "label")
       .attr("transform", centerTx)
 
+  const maxContentLenght = Math.max(...tickData.map(tick => tick.toString().length)) * 7;
+
   lg.selectAll("text")
       .data(ticks)
       .enter()
@@ -220,7 +222,7 @@ function _renderCurrentValueText({config, svg}) {
           // position the text 23pt below
           .attr("y", 23)
           // add text
-          .text(config.currentValue || "amaidhi")
+          .text(config.currentValue || "")
           .style("font-size", "16px")
           .style("font-weight", "bold")
           .style("fill", config.textColor)
