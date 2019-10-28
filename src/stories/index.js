@@ -410,4 +410,36 @@ storiesOf("react-d3-speedometer", module)
         ),
         {source: true, inline: true, header: true}
     )
+    .add(
+        "Custom Segment Stop Labels",
+        () => (
+            <div>
+                <div>
+                    <ReactSpeedometer
+                        positionLabel={'inner'}
+                        value={473}
+                        growSegmentOnHover={true}
+                        customSegmentStops={[0, 500, 750, 900, 1000]}
+                        customSegmentLabels={['Label 1', 'Label 2', 'Label 3', 'Label 4', 'Label 5']}
+                        segmentLabels={['Label 1', 'Label 2', 'Label 3', 'Label 4', 'Label 5', 'Label 6', 'Label 7', 'Label 8']}
+                        paddingSegment={true}
+                        segmentColors={["#FF9933", "#ECEFF4", "#138808"]}
+                        needleColor="#000080"
+                    />
+                    <ReactSpeedometer
+                        positionLabel={'outer'}
+                        value={8000}
+                        growSegmentOnHover={true}
+                        segmentLabels={['Label 1', 'Label 2', 'Label 3', 'Label 4', 'Label 5', 'Label 6', 'Label 7', 'Label 8']}
+                        paddingSegment={true}
+                        customSegmentStops={[0, 500, 750, 900, 1000]}
+                        customSegmentLabels={['Label 1', 'Label 2', 'Label 3', 'Label 4', 'Label 5']}
+                        segmentColors={["#FF9933", "#ECEFF4", "#138808"]}
+                        needleColor="#000080"
+                    />
+                </div>
+            </div>
+        ),
+        {source: true, inline: true, header: true}
+    )
 // .add("Auto Refresh Segments", () => <AutoRefresh />)

@@ -56,7 +56,8 @@ export const DEFAULT_PROPS = {
   paddingSegment: false,
   growSegmentOnHover: false,
   segmentLabels: [],
-  positionLabel: 'outer'
+  positionLabel: 'outer',
+  customSegmentLabels: [],
 }
 
 // default config
@@ -118,6 +119,7 @@ export const getConfig = ({ PROPS, parentWidth, parentHeight }) => {
     growSegmentOnHover: PROPS.growSegmentOnHover,
     segmentLabels: PROPS.segmentLabels,
     positionLabel: PROPS.positionLabel,
+    customSegmentLabels: PROPS.customSegmentLabels,
   }
 
   return Object.assign({}, DEFAULT_CONFIG, config)

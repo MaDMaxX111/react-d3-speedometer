@@ -11,6 +11,7 @@ import {
   formatCurrentValueText,
   sumArrayTill,
   getInnerRadius,
+  deg2rad,
 } from "../util"
 import { getNeedleTransition } from "../util/get-needle-transition"
 import {
@@ -173,6 +174,8 @@ function _renderLabels({config, svg, centerTx, r}) {
   const range = config.maxAngle - config.minAngle
 
   const strokeWidth = configureStroke(config)
+  const {segmentLabels: customSegmentLabels} = config;
+
   r = r - strokeWidth;
 
   if (config.positionLabel === 'inner') {
@@ -184,21 +187,45 @@ function _renderLabels({config, svg, centerTx, r}) {
       .attr("class", "label")
       .attr("transform", centerTx)
 
-  const maxContentLenght = Math.max(...tickData.map(tick => tick.toString().length)) * 7;
+  const getNewAngle = (tick, i) => {
+    const ratio =
+        config.customSegmentStops.length === 0
+            ? scale(tick)
+            : sumArrayTill(tickData, i)
+    const newAngle = config.minAngle + ratio * range;
+    return newAngle;
+  }
+  const t = () => {
+    debugger;
+    return 1;
+  }
+  const maxContentLength = Math.max(...(customSegmentLabels || tickData).map(tick => tick.toString().length)) * 7;
+  const minPlaceLength = ticks.reduce((minLength, currentTick, index, ticks) => {
+    if (index) {
+      const previwAngle = getNewAngle(ticks[index - 1], index - 1);
+      const currentAngle = getNewAngle(currentTick, index);
+      const angle = Math.abs(previwAngle - currentAngle);
+      const lenght = Math.tan(deg2rad(angle/2)) * Math.abs(config.labelInset - r) * 2;
+      return !minLength ? lenght : lenght < minLength ? lenght : minLength;
+    }
+    return minLength;
+  }, null);
 
+  const writingMode = maxContentLength < minPlaceLength ? null : "tb"
   lg.selectAll("text")
       .data(ticks)
       .enter()
       .append("text")
       .attr("transform", (d, i) => {
-        const ratio =
-            config.customSegmentStops.length === 0
-                ? scale(d)
-                : sumArrayTill(tickData, i)
-        const newAngle = config.minAngle + ratio * range
-        return `rotate(${newAngle}) translate(0, ${config.labelInset - r})`
+        return `rotate(${getNewAngle(d, i)}) translate(0, ${config.labelInset - r})`
       })
-      .text(config.labelFormat)
+      .attr("writing-mode", writingMode)
+      .text((d,i) => {
+        if (customSegmentLabels && customSegmentLabels[i]) {
+          return customSegmentLabels[i]
+        }
+        return config.labelFormat(d)
+      })
       // add class for text label
       .attr("class", "segment-value")
       // styling stuffs
