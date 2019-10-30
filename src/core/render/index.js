@@ -174,7 +174,7 @@ function _renderLabels({config, svg, centerTx, r}) {
   const range = config.maxAngle - config.minAngle
 
   const strokeWidth = configureStroke(config)
-  const {segmentLabels: customSegmentLabels} = config;
+  const {customSegmentLabels} = config;
 
   r = r - strokeWidth;
 
@@ -195,23 +195,22 @@ function _renderLabels({config, svg, centerTx, r}) {
     const newAngle = config.minAngle + ratio * range;
     return newAngle;
   }
-  const t = () => {
-    debugger;
-    return 1;
-  }
-  const maxContentLength = Math.max(...(customSegmentLabels || tickData).map(tick => tick.toString().length)) * 7;
-  const minPlaceLength = ticks.reduce((minLength, currentTick, index, ticks) => {
-    if (index) {
-      const previwAngle = getNewAngle(ticks[index - 1], index - 1);
-      const currentAngle = getNewAngle(currentTick, index);
-      const angle = Math.abs(previwAngle - currentAngle);
-      const lenght = Math.tan(deg2rad(angle/2)) * Math.abs(config.labelInset - r) * 2;
-      return !minLength ? lenght : lenght < minLength ? lenght : minLength;
-    }
-    return minLength;
-  }, null);
 
-  const writingMode = maxContentLength < minPlaceLength ? null : "tb"
+  // const maxContentLength = Math.max(...(customSegmentLabels || tickData).map(tick => tick.toString().length)) * 7;
+  //
+  // const minPlaceLength = ticks.reduce((minLength, currentTick, index, ticks) => {
+  //   if (index) {
+  //     const previwAngle = getNewAngle(ticks[index - 1], index - 1);
+  //     const currentAngle = getNewAngle(currentTick, index);
+  //     const angle = Math.abs(previwAngle - currentAngle);
+  //     const lenght = Math.tan(deg2rad(angle/2)) * Math.abs(config.labelInset - r) * 2;
+  //     return !minLength ? lenght : lenght < minLength ? lenght : minLength;
+  //   }
+  //   return minLength;
+  // }, null);
+
+  // const writingMode = maxContentLength < minPlaceLength ? null : "tb"
+
   lg.selectAll("text")
       .data(ticks)
       .enter()
@@ -219,22 +218,18 @@ function _renderLabels({config, svg, centerTx, r}) {
       .attr("transform", (d, i) => {
         return `rotate(${getNewAngle(d, i)}) translate(0, ${config.labelInset - r})`
       })
-      .attr("writing-mode", writingMode)
+      // .attr("writing-mode", writingMode)
       .text((d,i) => {
         if (customSegmentLabels && customSegmentLabels[i]) {
           return customSegmentLabels[i]
         }
         return config.labelFormat(d)
       })
-      // add class for text label
       .attr("class", "segment-value")
-      // styling stuffs
       .style("text-anchor", "middle")
       .style("font-size", "14px")
       .style("font-weight", "bold")
-      // .style("fill", "#666");
       .style("fill", config.textColor)
-      // .style("writing-mode", "tb")
 }
 
 function _renderCurrentValueText({config, svg}) {
@@ -243,12 +238,9 @@ function _renderCurrentValueText({config, svg}) {
           .append("g")
           .attr("transform", `translate(${config.width / 2}, ${config.width / 2})`)
           .append("text")
-          // add class for the text
           .attr("class", "current-value")
           .attr("text-anchor", "middle")
-          // position the text 23pt below
           .attr("y", 23)
-          // add text
           .text(config.currentValue || "")
           .style("font-size", "16px")
           .style("font-weight", "bold")

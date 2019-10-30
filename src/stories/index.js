@@ -420,7 +420,7 @@ storiesOf("react-d3-speedometer", module)
                         value={473}
                         growSegmentOnHover={true}
                         customSegmentStops={[0, 500, 750, 900, 1000]}
-                        customSegmentLabels={['Label 1', 'Label 2', 'Label 3', 'Label 4', 'Label 5']}
+                        customSegmentLabels={['Label 1', 'Label 2',]}
                         segmentLabels={['Label 1', 'Label 2', 'Label 3', 'Label 4', 'Label 5', 'Label 6', 'Label 7', 'Label 8']}
                         paddingSegment={true}
                         segmentColors={["#FF9933", "#ECEFF4", "#138808"]}
