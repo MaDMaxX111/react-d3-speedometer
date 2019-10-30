@@ -33,6 +33,7 @@
     "storybook": "start-storybook -p 9010",
     "publish-storybook": "bash .scripts/publish_storybook.sh",
     "try-build": "cross-env NODE_ENV=production ./node_modules/.bin/babel --ignore ./src/__tests__,./src/**/*.test.js,./src/stories ./src --out-dir ./dist --no-comments",
+    "prepare": "npm run build",
     "build": "cross-env NODE_ENV=production ./node_modules/.bin/babel --ignore ./src/__tests__,./src/**/*.test.js,./src/stories ./src --out-dir ./dist --no-comments"
   },
   "devDependencies": {
