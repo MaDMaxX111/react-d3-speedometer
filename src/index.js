@@ -124,6 +124,7 @@ ReactSpeedometer.propTypes = {
   segmentLabels: PropTypes.arrayOf(PropTypes.string),
   positionLabel: PropTypes.oneOf(['outer', 'inner']),
   customSegmentLabels: PropTypes.arrayOf(PropTypes.string),
+  title: PropTypes.string,
 }
 
 // define the default proptypes

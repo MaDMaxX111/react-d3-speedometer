@@ -58,6 +58,7 @@ export const DEFAULT_PROPS = {
   segmentLabels: [],
   positionLabel: 'outer',
   customSegmentLabels: [],
+  title: null,
 }
 
 // default config
@@ -120,6 +121,7 @@ export const getConfig = ({ PROPS, parentWidth, parentHeight }) => {
     segmentLabels: PROPS.segmentLabels,
     positionLabel: PROPS.positionLabel,
     customSegmentLabels: PROPS.customSegmentLabels,
+    title: PROPS.title,
   }
 
   return Object.assign({}, DEFAULT_CONFIG, config)

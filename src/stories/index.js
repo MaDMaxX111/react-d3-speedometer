@@ -442,4 +442,24 @@ storiesOf("react-d3-speedometer", module)
         ),
         {source: true, inline: true, header: true}
     )
+    .add(
+        "Custom title",
+        () => (
+            <div>
+                <div>
+                    <ReactSpeedometer
+                        title={'Custom title'}
+                        maxValue={500}
+                        value={473}
+                        growSegmentOnHover={true}
+                        paddingSegment={true}
+                        segments={10}
+                        segmentColors={["#FF9933", "#ECEFF4", "#138808"]}
+                        needleColor="#000080"
+                    />
+                </div>
+            </div>
+        ),
+        {source: true, inline: true, header: true}
+    )
 // .add("Auto Refresh Segments", () => <AutoRefresh />)

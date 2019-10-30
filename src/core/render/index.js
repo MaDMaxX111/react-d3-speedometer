@@ -59,7 +59,7 @@ export const render = ({container, config}) => {
 
   _renderArcs({ config, svg, centerTx })
   _renderLabels({ config, svg, centerTx, r })
-
+  _renderTitleText({config, svg})
   return {
     current_value_text: _renderCurrentValueText({config, svg}),
     pointer: _renderNeedle({config, svg, r, centerTx}),
@@ -287,4 +287,21 @@ function _initTooltip({parent}) {
       .style("padding", "5px")
       .style("position", "absolute")
       .style("display", "block")
+}
+
+function _renderTitleText({config, svg}) {
+  const { title } = config;
+  return (
+      title ? svg
+          .append("g")
+          .attr("transform", `translate(${config.width / 2}, ${config.width / 2})`)
+          .append("text")
+          .attr("class", "title")
+          .attr("text-anchor", "middle")
+          .attr("y", 40)
+          .text(title)
+          .style("font-size", "16px")
+          .style("font-weight", "bold")
+          .style("fill", config.textColor) : null
+  )
 }
