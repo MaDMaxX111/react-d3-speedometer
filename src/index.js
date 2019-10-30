@@ -65,7 +65,6 @@ class ReactSpeedometer extends PureComponent {
       labelFormat: d3Format(this.props.valueFormat || ""),
       currentValueText: this.props.currentValueText || "${value}",
     })
-
     // updates the readings of the gauge with the current prop value
     // animates between old prop value and current prop value
     update({
@@ -119,6 +118,12 @@ ReactSpeedometer.propTypes = {
   currentValueText: PropTypes.string.isRequired,
   // placeholder style for current value
   currentValuePlaceholderStyle: PropTypes.string.isRequired,
+  // padding between sectors
+  paddingSegment: PropTypes.bool,
+  growSegmentOnHover: PropTypes.bool,
+  segmentLabels: PropTypes.arrayOf(PropTypes.string),
+  positionLabel: PropTypes.oneOf(['outer', 'inner']),
+  customSegmentLabels: PropTypes.arrayOf(PropTypes.string),
 }
 
 // define the default proptypes

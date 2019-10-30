@@ -13,6 +13,9 @@ export const configureScale = memoizeOne(_configureScale)
 export const configureTicks = memoizeOne(_configureTicks)
 export const configureTickData = memoizeOne(_configureTickData)
 export const configureArc = memoizeOne(_configureArc)
+export const configureStroke = memoizeOne(_configureStroke)
+export const configureArcHover = memoizeOne(_configureArcHover)
+export const configureTooltipLabels = memoizeOne(_configureTooltipLabels)
 
 function _configureScale(config) {
   return calculateScale({
@@ -59,17 +62,66 @@ function _configureArc(config) {
   const range = config.maxAngle - config.minAngle
   const r = config.width / 2
 
-  const arc = d3Arc()
-    .innerRadius(r - config.ringWidth - config.ringInset)
-    .outerRadius(r - config.ringInset)
-    .startAngle((d, i) => {
-      const ratio = sumArrayTill(tickData, i)
-      return deg2rad(config.minAngle + ratio * range)
-    })
-    .endAngle((d, i) => {
-      const ratio = sumArrayTill(tickData, i + 1)
-      return deg2rad(config.minAngle + ratio * range)
-    })
+  const arc = (index = null) => {
+    return d3Arc()
+        .innerRadius(r - config.ringWidth - config.ringInset)
+        .outerRadius(r - config.ringInset)
+        .startAngle((d, i) => {
+          const ratio = sumArrayTill(tickData, index || i)
+          return deg2rad(config.minAngle + ratio * range)
+        })
+        .endAngle((d, i) => {
+          const ratio = sumArrayTill(tickData, (index || i) + 1)
+          return deg2rad(config.minAngle + ratio * range)
+        })
+  }
 
   return arc
+}
+
+function _configureStroke(config) {
+  const { paddingSegment, width, majorTicks } = config;
+  if (paddingSegment && majorTicks > 1) {
+    return  Math.ceil((width / majorTicks) * 0.1);
+  }
+  return 0;
+}
+
+function _configureArcHover(config) {
+
+  const tickData = configureTickData(config)
+
+  const range = config.maxAngle - config.minAngle
+  const r = config.width / 2
+
+  const arc = (index) => {
+    return d3Arc()
+        .innerRadius(r - config.ringWidth - config.ringInset - 5)
+        .outerRadius(r - config.ringInset + 5)
+        .startAngle(() => {
+          const ratio = sumArrayTill(tickData, index)
+          return deg2rad(config.minAngle + ratio * range)
+        })
+        .endAngle(() => {
+          const ratio = sumArrayTill(tickData, index + 1)
+          return deg2rad(config.minAngle + ratio * range)
+        })
+  }
+
+  return arc
+}
+
+function _configureTooltipLabels(config, segmentsColor) {
+  const { segmentLabels } = config;
+  const label = (index) => {
+    if (typeof segmentLabels[index] === 'undefined' || segmentLabels[index] === null) return null;
+    let html = '<span style="display: flex;">' +
+        '<span class="legend-color-guide" style="background-color: ' + segmentsColor[index] + '; width: 15px; height: 15px; border: 1px solid #999; display: inline-block; margin-right: 5px;"></span>' +
+        '<span class="key">' + segmentLabels[index] + '</span>' +
+        '</span>'
+
+    return html
+  }
+
+  return label
 }
