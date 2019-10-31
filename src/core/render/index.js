@@ -11,7 +11,6 @@ import {
   formatCurrentValueText,
   sumArrayTill,
   getInnerRadius,
-  deg2rad,
 } from "../util"
 import { getNeedleTransition } from "../util/get-needle-transition"
 import {
@@ -179,7 +178,7 @@ function _renderLabels({config, svg, centerTx, r}) {
   r = r - strokeWidth;
 
   if (config.positionLabel === 'inner') {
-    r = getInnerRadius(config) + strokeWidth
+    r = r - config.ringWidth - config.ringInset
   }
 
   let lg = svg

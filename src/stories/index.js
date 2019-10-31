@@ -363,8 +363,12 @@ storiesOf("react-d3-speedometer", module)
                         segments={10}
                         segmentColors={["#FF9933", "#ECEFF4", "#138808"]}
                         needleColor="#000080"
+                        width={800}
+                        height={800}
                     />
                     <ReactSpeedometer
+                        width={800}
+                        height={800}
                         positionLabel={'outer'}
                         maxValue={500}
                         value={473}
