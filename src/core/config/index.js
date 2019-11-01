@@ -122,6 +122,7 @@ export const getConfig = ({ PROPS, parentWidth, parentHeight }) => {
     positionLabel: PROPS.positionLabel,
     customSegmentLabels: PROPS.customSegmentLabels,
     title: PROPS.title,
+    value: PROPS.value,
   }
 
   return Object.assign({}, DEFAULT_CONFIG, config)

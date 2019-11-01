@@ -115,7 +115,7 @@ function _configureTooltipLabels(config, segmentsColor) {
   const { segmentLabels } = config;
   const label = (index) => {
     if (typeof segmentLabels[index] === 'undefined' || segmentLabels[index] === null) return null;
-    let html = '<span style="display: flex;">' +
+    let html = '<span style="display: flex; align-items: center; margin-top: 0.5px;">' +
         '<span class="legend-color-guide" style="background-color: ' + segmentsColor[index] + '; width: 15px; height: 15px; border: 1px solid #999; display: inline-block; margin-right: 5px;"></span>' +
         '<span class="key">' + segmentLabels[index] + '</span>' +
         '</span>'
