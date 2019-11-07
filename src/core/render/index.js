@@ -3,7 +3,7 @@ import {
     line as d3Line,
     curveMonotoneX as d3CurveMonotoneX, selectAll
 } from "d3"
-
+import dd from 'd3';
 import {
     centerTranslation,
     getRadius,
@@ -47,6 +47,11 @@ export const update = ({d3_refs, newValue, config}) => {
         .duration(config.needleTransitionDuration)
         .ease(getNeedleTransition(config.needleTransition))
         .attr("transform", `rotate(${newAngle})`)
+        .attrTween("transform", () => {
+            return function(t) {
+                return `rotate(${config.minAngle + (newAngle - config.minAngle) * t})`;
+            };
+        })
     d3_refs.current_value_text.text(formatCurrentValueText(newValue, config))
 }
 
