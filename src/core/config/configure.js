@@ -13,6 +13,7 @@ export const configureScale = memoizeOne(_configureScale)
 export const configureTicks = memoizeOne(_configureTicks)
 export const configureTickData = memoizeOne(_configureTickData)
 export const configureArc = memoizeOne(_configureArc)
+export const configureArcStub = memoizeOne(_configureArcStub)
 export const configureStroke = memoizeOne(_configureStroke)
 export const configureArcHover = memoizeOne(_configureArcHover)
 export const configureTooltipLabels = memoizeOne(_configureTooltipLabels)
@@ -74,6 +75,43 @@ function _configureArc(config) {
           const ratio = sumArrayTill(tickData, (index || i) + 1)
           return deg2rad(config.minAngle + ratio * range)
         })
+  }
+
+  return arc
+}
+
+function _configureArcStub(config) {
+  const tickData = configureTickData(config)
+  const range = config.maxAngle - config.minAngle
+  const r = config.width / 2
+
+  const arc = (index = 'start', strokeWidth = 0) => {
+    if (index == 'start') {
+      return d3Arc()
+          .innerRadius(r - config.ringWidth - config.ringInset + strokeWidth / 2)
+          .outerRadius(r - config.ringInset - strokeWidth / 2)
+          .startAngle((d, i) => {
+            const ratio = sumArrayTill(tickData, 0)
+            return deg2rad(config.minAngle + ratio * range)
+          })
+          .endAngle((d, i) => {
+            const ratio = tickData[0] * 0.2;
+            return deg2rad(config.minAngle + ratio * range)
+          })
+    }
+
+    return d3Arc()
+        .innerRadius(r - config.ringWidth - config.ringInset + strokeWidth / 2)
+        .outerRadius(r - config.ringInset - strokeWidth / 2)
+        .startAngle((d, i) => {
+          const ratio = sumArrayTill(tickData, tickData.length - 1) + (sumArrayTill(tickData, tickData.length) - sumArrayTill(tickData, tickData.length - 1)) * 0.8;
+          return deg2rad(config.minAngle + ratio * range)
+        })
+        .endAngle((d, i) => {
+          const ratio = sumArrayTill(tickData, tickData.length)
+          return deg2rad(config.minAngle + ratio * range)
+        })
+
   }
 
   return arc

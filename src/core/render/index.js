@@ -21,6 +21,7 @@ import {
     configureTickData,
     configureTicks,
     configureTooltipLabels,
+    configureArcStub,
 } from "../config/configure"
 
 import {
@@ -83,8 +84,10 @@ function _renderSVG({container, config}) {
 }
 
 function _renderArcs({config, svg, centerTx, toolTip}) {
+
     const tickData = configureTickData(config)
     const arc = configureArc(config)
+    const arcStub = configureArcStub(config)
     const arcHover = configureArcHover(config)
     const strokeWidth = configureStroke(config)
 
@@ -134,6 +137,15 @@ function _renderArcs({config, svg, centerTx, toolTip}) {
                 el.transition()
                     .duration(70)
                     .attr("d", arcHover(i))
+
+                if (i === tickData.length - 1 || i === 0) {
+                    const parent = el.node().parentNode
+                    const elStub = i === 0 ? d3Select(parent).select('.speedo-segment-stub-start') : d3Select(parent).select('.speedo-segment-stub-end');
+                    elStub.classed('hover', true);
+                    elStub.transition()
+                        .duration(70)
+                        .attr("d", arcStub(i === 0 ? 'start' : 'end', strokeWidth - 10))
+                }
             }
 
             if (useTooltips) {
@@ -150,6 +162,15 @@ function _renderArcs({config, svg, centerTx, toolTip}) {
                 el.transition()
                     .duration(70)
                     .attr("d", arc(i))
+
+                if (i === tickData.length - 1 || i === 0) {
+                    const parent = el.node().parentNode
+                    const elStub = i === 0 ? d3Select(parent).select('.speedo-segment-stub-start') : d3Select(parent).select('.speedo-segment-stub-end');
+                    elStub.classed('hover', true);
+                    elStub.transition()
+                        .duration(70)
+                        .attr("d", arcStub(i === 0 ? 'start' : 'end', strokeWidth))
+                }
             }
 
             if (useTooltips) {
@@ -169,6 +190,20 @@ function _renderArcs({config, svg, centerTx, toolTip}) {
             .on("mouseenter", onMouseenter)
             .on("mouseout", onMouseout)
             .on("mousemove", onMousemove)
+    }
+
+    if (config.paddingSegment && strokeWidth) {
+        arcs
+            .append("path")
+            .attr("class", "speedo-segment-stub-start")
+            .attr("fill", segmentsColor[0])
+            .attr("d", arcStub('start', strokeWidth))
+
+        arcs
+            .append("path")
+            .attr("class", "speedo-segment-stub-end")
+            .attr("fill", segmentsColor[segmentsColor.length - 1])
+            .attr("d", arcStub('end', strokeWidth))
     }
 
 }
