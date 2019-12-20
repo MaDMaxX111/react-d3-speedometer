@@ -7,13 +7,13 @@ import {
   calculateTicks,
   calculateSegmentStops,
 } from "../util"
+import {debugNode} from "enzyme/src/Debug";
 
 // export memoized functions
 export const configureScale = memoizeOne(_configureScale)
 export const configureTicks = memoizeOne(_configureTicks)
 export const configureTickData = memoizeOne(_configureTickData)
 export const configureArc = memoizeOne(_configureArc)
-export const configureArcStub = memoizeOne(_configureArcStub)
 export const configureStroke = memoizeOne(_configureStroke)
 export const configureArcHover = memoizeOne(_configureArcHover)
 export const configureTooltipLabels = memoizeOne(_configureTooltipLabels)
@@ -65,8 +65,8 @@ function _configureArc(config) {
 
   const arc = (index = null) => {
     return d3Arc()
-        .innerRadius(r - config.ringWidth - config.ringInset)
-        .outerRadius(r - config.ringInset)
+        .innerRadius(r - config.ringWidth - (config.positionLabel == 'inner' ? 0 : config.ringInset))
+        .outerRadius(r - (config.positionLabel == 'inner' ? 0 : config.ringInset))
         .startAngle((d, i) => {
           const ratio = sumArrayTill(tickData, index || i)
           return deg2rad(config.minAngle + ratio * range)
@@ -80,47 +80,11 @@ function _configureArc(config) {
   return arc
 }
 
-function _configureArcStub(config) {
-  const tickData = configureTickData(config)
-  const range = config.maxAngle - config.minAngle
-  const r = config.width / 2
-
-  const arc = (index = 'start', strokeWidth = 0) => {
-    if (index == 'start') {
-      return d3Arc()
-          .innerRadius(r - config.ringWidth - config.ringInset + strokeWidth / 2)
-          .outerRadius(r - config.ringInset - strokeWidth / 2)
-          .startAngle((d, i) => {
-            const ratio = sumArrayTill(tickData, 0)
-            return deg2rad(config.minAngle + ratio * range)
-          })
-          .endAngle((d, i) => {
-            const ratio = tickData[0] * 0.2;
-            return deg2rad(config.minAngle + ratio * range)
-          })
-    }
-
-    return d3Arc()
-        .innerRadius(r - config.ringWidth - config.ringInset + strokeWidth / 2)
-        .outerRadius(r - config.ringInset - strokeWidth / 2)
-        .startAngle((d, i) => {
-          const ratio = sumArrayTill(tickData, tickData.length - 1) + (sumArrayTill(tickData, tickData.length) - sumArrayTill(tickData, tickData.length - 1)) * 0.8;
-          return deg2rad(config.minAngle + ratio * range)
-        })
-        .endAngle((d, i) => {
-          const ratio = sumArrayTill(tickData, tickData.length)
-          return deg2rad(config.minAngle + ratio * range)
-        })
-
-  }
-
-  return arc
-}
-
 function _configureStroke(config) {
   const { paddingSegment, width, majorTicks } = config;
   if (paddingSegment && majorTicks > 1) {
-    return  Math.ceil((width / majorTicks) * 0.1);
+    // return  Math.ceil((width / majorTicks) * 0.1);
+    return  1;
   }
   return 0;
 }
@@ -134,8 +98,8 @@ function _configureArcHover(config) {
 
   const arc = (index) => {
     return d3Arc()
-        .innerRadius(r - config.ringWidth - config.ringInset - 5)
-        .outerRadius(r - config.ringInset + 5)
+        .innerRadius(r - config.ringWidth - (config.positionLabel == 'inner' ? 0 : config.ringInset) - 5)
+        .outerRadius(r - (config.positionLabel == 'inner' ? 0 : config.ringInset) + 5)
         .startAngle(() => {
           const ratio = sumArrayTill(tickData, index)
           return deg2rad(config.minAngle + ratio * range)

@@ -63,7 +63,7 @@ export const DEFAULT_PROPS = {
 
 // default config
 const DEFAULT_CONFIG = {
-  ringInset: 20,
+  ringInset: 35,
 
   pointerWidth: 10,
   pointerTailLength: 5,
@@ -71,7 +71,7 @@ const DEFAULT_CONFIG = {
   minAngle: -90,
   maxAngle: 90,
 
-  labelInset: 10,
+  labelInset: 25,
 }
 
 export const getConfig = ({ PROPS, parentWidth, parentHeight }) => {

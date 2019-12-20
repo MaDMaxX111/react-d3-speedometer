@@ -1,16 +1,15 @@
 import {
     select as d3Select,
     line as d3Line,
-    curveMonotoneX as d3CurveMonotoneX, selectAll
+    curveMonotoneX as d3CurveMonotoneX,
 } from "d3"
-import dd from 'd3';
+
 import {
     centerTranslation,
     getRadius,
     calculateNeedleHeight,
     formatCurrentValueText,
     sumArrayTill,
-    getInnerRadius,
 } from "../util"
 import {getNeedleTransition} from "../util/get-needle-transition"
 import {
@@ -21,7 +20,6 @@ import {
     configureTickData,
     configureTicks,
     configureTooltipLabels,
-    configureArcStub,
 } from "../config/configure"
 
 import {
@@ -29,6 +27,7 @@ import {
     hideTooltip,
     moveTooltip,
 } from "./tooltip"
+import {debugNode} from "enzyme/src/Debug";
 
 export const update = ({d3_refs, newValue, config}) => {
     const scale = configureScale(config)
@@ -49,7 +48,7 @@ export const update = ({d3_refs, newValue, config}) => {
         .ease(getNeedleTransition(config.needleTransition))
         .attr("transform", `rotate(${newAngle})`)
         .attrTween("transform", () => {
-            return function(t) {
+            return function (t) {
                 return `rotate(${config.minAngle + (newAngle - config.minAngle) * t})`;
             };
         })
@@ -65,7 +64,7 @@ export const render = ({container, config}) => {
     const toolTip = _initTooltip({parent: svg.node().parentNode})
 
     _renderArcs({config, svg, centerTx, toolTip})
-    _renderLabels({config, svg, centerTx, r})
+    _renderLabels({config, svg, centerTx, r, toolTip})
     _renderTitleText({config, svg})
 
     return {
@@ -87,7 +86,6 @@ function _renderArcs({config, svg, centerTx, toolTip}) {
 
     const tickData = configureTickData(config)
     const arc = configureArc(config)
-    const arcStub = configureArcStub(config)
     const arcHover = configureArcHover(config)
     const strokeWidth = configureStroke(config)
 
@@ -137,15 +135,6 @@ function _renderArcs({config, svg, centerTx, toolTip}) {
                 el.transition()
                     .duration(70)
                     .attr("d", arcHover(i))
-
-                if (i === tickData.length - 1 || i === 0) {
-                    const parent = el.node().parentNode
-                    const elStub = i === 0 ? d3Select(parent).select('.speedo-segment-stub-start') : d3Select(parent).select('.speedo-segment-stub-end');
-                    elStub.classed('hover', true);
-                    elStub.transition()
-                        .duration(70)
-                        .attr("d", arcStub(i === 0 ? 'start' : 'end', strokeWidth - 10))
-                }
             }
 
             if (useTooltips) {
@@ -162,15 +151,6 @@ function _renderArcs({config, svg, centerTx, toolTip}) {
                 el.transition()
                     .duration(70)
                     .attr("d", arc(i))
-
-                if (i === tickData.length - 1 || i === 0) {
-                    const parent = el.node().parentNode
-                    const elStub = i === 0 ? d3Select(parent).select('.speedo-segment-stub-start') : d3Select(parent).select('.speedo-segment-stub-end');
-                    elStub.classed('hover', true);
-                    elStub.transition()
-                        .duration(70)
-                        .attr("d", arcStub(i === 0 ? 'start' : 'end', strokeWidth))
-                }
             }
 
             if (useTooltips) {
@@ -191,24 +171,9 @@ function _renderArcs({config, svg, centerTx, toolTip}) {
             .on("mouseout", onMouseout)
             .on("mousemove", onMousemove)
     }
-
-    if (config.paddingSegment && strokeWidth) {
-        arcs
-            .append("path")
-            .attr("class", "speedo-segment-stub-start")
-            .attr("fill", segmentsColor[0])
-            .attr("d", arcStub('start', strokeWidth))
-
-        arcs
-            .append("path")
-            .attr("class", "speedo-segment-stub-end")
-            .attr("fill", segmentsColor[segmentsColor.length - 1])
-            .attr("d", arcStub('end', strokeWidth))
-    }
-
 }
 
-function _renderLabels({config, svg, centerTx, r}) {
+function _renderLabels({config, svg, centerTx, r, toolTip}) {
 
     const ticks = configureTicks(config)
     const tickData = configureTickData(config)
@@ -221,7 +186,8 @@ function _renderLabels({config, svg, centerTx, r}) {
     r = r - strokeWidth;
 
     if (config.positionLabel === 'inner') {
-        r = r - config.ringWidth - config.ringInset
+        r = r - config.ringWidth;
+        console.log(r);
     }
 
     let lg = svg
@@ -238,6 +204,22 @@ function _renderLabels({config, svg, centerTx, r}) {
         return newAngle;
     }
 
+
+    const angles = ticks.reduce((result, tick, index) => {
+        return result.concat([getNewAngle(tick, index)]);
+    }, []);
+
+    // расчет ширины для лейблов
+    const labelRadius = Math.abs((config.positionLabel === 'inner' ? 0 : config.labelInset) - r);
+    const widths = angles.reduce((result, angle, index, angles) => {
+        let currentAngle = (index + 1 < angles.length - 1) ? angles[index + 1] - angle : angle + 10 - angle;
+        let previewAngle = index ? angle - angles[index - 1] : Math.abs(angle - 10 - angle);
+        currentAngle = (currentAngle / 2) * Math.PI / 180;
+        previewAngle = (previewAngle / 2) * Math.PI / 180;
+        return result.concat([[labelRadius * Math.tan(previewAngle) * 0.9, labelRadius * Math.tan(currentAngle) * 0.9]])
+    }, []);
+
+    const labels = [];
     lg.selectAll("text")
         .data(ticks)
         .enter()
@@ -247,15 +229,54 @@ function _renderLabels({config, svg, centerTx, r}) {
         })
         .text((d, i) => {
             if (customSegmentLabels && customSegmentLabels[i]) {
-                return customSegmentLabels[i]
+                labels.push(customSegmentLabels[i]);
+                return customSegmentLabels[i];
             }
-            return config.labelFormat(d)
+            labels.push(config.labelFormat(d));
+            return config.labelFormat(d);
         })
         .attr("class", "segment-value")
         .style("text-anchor", "middle")
         .style("font-size", "14px")
         .style("font-weight", "bold")
         .style("fill", config.textColor)
+        .style("cursor", "pointer")
+        .call(wrap, widths, config.positionLabel)
+
+    const onShowTooltip = showTooltip(toolTip)
+    const onHideTooltip = hideTooltip(toolTip)
+    const onMoveTooltip = moveTooltip(toolTip)
+
+    const onMouseenter = (d, i, groups) => {
+
+            const el = d3Select(groups[i]);
+            el.classed('hover', true);
+            el.transition()
+                .duration(70)
+                .style("font-size", "16px");
+
+            const text = labels[i];
+            onShowTooltip(text)
+    }
+
+    const onMouseout = (d, i, groups) => {
+        const el = d3Select(groups[i]);
+        el.classed('hover', true);
+        el.transition()
+            .duration(70)
+            .style("font-size", "14px");
+        onHideTooltip();
+    }
+
+    const onMousemove = () => {
+        onMoveTooltip(svg.node().parentNode)
+    }
+
+    lg
+        .selectAll(".segment-value")
+        .on("mouseenter", onMouseenter)
+        .on("mouseout", onMouseout)
+        .on("mousemove", onMousemove)
 }
 
 function _renderCurrentValueText({config, svg}) {
@@ -351,4 +372,88 @@ function _renderTitleText({config, svg}) {
             .style("font-weight", "bold")
             .style("fill", config.textColor) : null
     )
+}
+
+function wrap(text, widths, positionLabel) {
+
+    text.each(function (t, index) {
+        const width = widths[index];
+        const [widthLeft, widthRight] = width;
+        let text = d3Select(this),
+            words = text.text().split(/\s+/),
+            line = [],
+            lineNumber = 1,
+            lineHeight = 1, // ems
+            y = text.attr("y"),
+            dy = parseFloat(text.attr("dy") || 0),
+            tspan = text.text(null).append("tspan").attr("x", 0).attr("y", y).attr("dy", dy + "em");
+
+        // разбиваем на несколько строк если в этом есть необходимость
+        let breakingIndex = null;
+        try {
+            words.forEach((word, index) => {
+                breakingIndex = index;
+                line.push(word);
+                tspan.text(line.join(" "));
+                const {width: contentLenght} = tspan.node().getBBox();
+                if (contentLenght > (widthLeft + widthRight)) {
+                    if (line.length < 2) {
+                        tspan.text(line.join(" "));
+                        throw new Error();
+                    } else {
+                        line.pop();
+                        tspan.text(line.join(" "));
+                        line = [];
+                        tspan = text.append("tspan").attr("x", 0).attr("y", y).attr("dy", (++lineNumber - (positionLabel == 'inner' ? 1 : 1)) * (lineHeight + dy) + "em").text(word);
+                    }
+                }
+                if (lineNumber > 1) {
+                    throw new Error()
+                }
+            });
+        } catch (e) {
+            if (breakingIndex < words.length - 1) {
+                const lastTspan = text.selectAll('tspan:last-of-type');
+                lastTspan.text(lastTspan.text() + '...')
+            }
+        }
+
+        // проверяем по ширине
+        const {width: widthTextContent} = text.node().getBBox();
+        // let breakingIndex = null;
+        if (widthTextContent > widthRight + widthLeft) {
+            try {
+                text.selectAll('tspan').each(function (el, lineIndex) {
+                    const tspan = d3Select(this);
+                    if (breakingIndex) {
+                        throw new Error();
+                    }
+                    while (tspan.node().getBBox().width > widthRight + widthLeft && tspan.text().length > 8) {
+                        breakingIndex = lineIndex;
+                        const text = tspan.text();
+                        tspan.text(text.substring(0, text[text.length - 5] == ' ' ? text.length - 5 : text.length - 4) + "...");
+                    }
+
+                    if (tspan.node().getBBox().width > widthRight + widthLeft) {
+                        tspan.node().remove();
+                    }
+                })
+            } catch (e) {
+            }
+        }
+
+        const {width: widthText} = text.node().getBBox();
+        const contentLenghtCenter = widthText / 2;
+
+        let biasX = 0;
+        if (contentLenghtCenter > widthRight) {
+            biasX = widthRight - contentLenghtCenter;
+        }
+        if (contentLenghtCenter > widthLeft) {
+            biasX = contentLenghtCenter - widthLeft;
+        }
+        text.select('tspan').attr("dy", (positionLabel == 'inner' ? -0.5 : -(lineNumber - 1)) + "em");
+        // смещение от центра
+        text.selectAll('tspan').attr('x', parseInt(biasX, 10));
+    });
 }

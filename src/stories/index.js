@@ -466,4 +466,40 @@ storiesOf("react-d3-speedometer", module)
         ),
         {source: true, inline: true, header: true}
     )
+    .add(
+        "Adaptive Labels",
+        () => (
+            <div>
+                <div>
+                    <ReactSpeedometer
+                        positionLabel={'inner'}
+                        value={500}
+                        width={300}
+                        height={300}
+                        growSegmentOnHover={true}
+                        customSegmentStops={[0, 100, 200, 300, 400, 500, 750, 900, 1000]}
+                        customSegmentLabels={['L a b e l 1', 'Label 2',]}
+                        segmentLabels={['L abel 1', 'Label 2', 'Label 3', 'Label 4', 'Label 5', 'Label 6', 'Label 7', 'Label 8']}
+                        paddingSegment={true}
+                        segmentColors={["#FF9933", "#ECEFF4", "#138808"]}
+                        needleColor="#000080"
+                    />
+                    <ReactSpeedometer
+                        width={800}
+                        height={600}
+                        positionLabel={'outer'}
+                        value={500}
+                        growSegmentOnHover={true}
+                        segmentLabels={['Label 1', 'Label 2', 'Label 3', 'Label 4', 'Label 5', 'Label 6', 'Label 7', 'Label 8']}
+                        paddingSegment={true}
+                        customSegmentStops={[0, 50, 200, 300, 400, 500, 750, 900, 1000]}
+                        customSegmentLabels={['Label1Lahhhb e l 1 L a b e l 1', 'Label2 Lab el2Label 2', 'Label 3', 'Label 4', 'Label 5', 'Label 6', 'Label7Label7Label7Label7Label7']}
+                        segmentColors={["#FF9933", "#ECEFF4", "#138808"]}
+                        needleColor="#000080"
+                    />
+                </div>
+            </div>
+        ),
+        {source: true, inline: true, header: true}
+    )
 // .add("Auto Refresh Segments", () => <AutoRefresh />)
