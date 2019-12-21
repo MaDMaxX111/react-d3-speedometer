@@ -5,7 +5,7 @@ import {
   format as d3Format,
 } from "d3"
 import { calculateSegmentLabelCount } from "../util/"
-import PropTypes from "prop-types";
+import PropTypes from "prop-types"
 
 // default props
 export const DEFAULT_PROPS = {
@@ -56,7 +56,7 @@ export const DEFAULT_PROPS = {
   paddingSegment: false,
   growSegmentOnHover: false,
   segmentLabels: [],
-  positionLabel: 'outer',
+  positionLabel: "outer",
   customSegmentLabels: [],
   title: null,
 }

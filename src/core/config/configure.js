@@ -7,7 +7,6 @@ import {
   calculateTicks,
   calculateSegmentStops,
 } from "../util"
-import {debugNode} from "enzyme/src/Debug";
 
 // export memoized functions
 export const configureScale = memoizeOne(_configureScale)
@@ -65,32 +64,35 @@ function _configureArc(config) {
 
   const arc = (index = null) => {
     return d3Arc()
-        .innerRadius(r - config.ringWidth - (config.positionLabel == 'inner' ? 0 : config.ringInset))
-        .outerRadius(r - (config.positionLabel == 'inner' ? 0 : config.ringInset))
-        .startAngle((d, i) => {
-          const ratio = sumArrayTill(tickData, index || i)
-          return deg2rad(config.minAngle + ratio * range)
-        })
-        .endAngle((d, i) => {
-          const ratio = sumArrayTill(tickData, (index || i) + 1)
-          return deg2rad(config.minAngle + ratio * range)
-        })
+      .innerRadius(
+        r -
+          config.ringWidth -
+          (config.positionLabel == "inner" ? 0 : config.ringInset)
+      )
+      .outerRadius(r - (config.positionLabel == "inner" ? 0 : config.ringInset))
+      .startAngle((d, i) => {
+        const ratio = sumArrayTill(tickData, index || i)
+        return deg2rad(config.minAngle + ratio * range)
+      })
+      .endAngle((d, i) => {
+        const ratio = sumArrayTill(tickData, (index || i) + 1)
+        return deg2rad(config.minAngle + ratio * range)
+      })
   }
 
   return arc
 }
 
 function _configureStroke(config) {
-  const { paddingSegment, width, majorTicks } = config;
+  const { paddingSegment, width, majorTicks } = config
   if (paddingSegment && majorTicks > 1) {
     // return  Math.ceil((width / majorTicks) * 0.1);
-    return  1;
+    return 1
   }
-  return 0;
+  return 0
 }
 
 function _configureArcHover(config) {
-
   const tickData = configureTickData(config)
 
   const range = config.maxAngle - config.minAngle
@@ -98,29 +100,45 @@ function _configureArcHover(config) {
 
   const arc = (index) => {
     return d3Arc()
-        .innerRadius(r - config.ringWidth - (config.positionLabel == 'inner' ? 0 : config.ringInset) - 5)
-        .outerRadius(r - (config.positionLabel == 'inner' ? 0 : config.ringInset) + 5)
-        .startAngle(() => {
-          const ratio = sumArrayTill(tickData, index)
-          return deg2rad(config.minAngle + ratio * range)
-        })
-        .endAngle(() => {
-          const ratio = sumArrayTill(tickData, index + 1)
-          return deg2rad(config.minAngle + ratio * range)
-        })
+      .innerRadius(
+        r -
+          config.ringWidth -
+          (config.positionLabel == "inner" ? 0 : config.ringInset) -
+          5
+      )
+      .outerRadius(
+        r - (config.positionLabel == "inner" ? 0 : config.ringInset) + 5
+      )
+      .startAngle(() => {
+        const ratio = sumArrayTill(tickData, index)
+        return deg2rad(config.minAngle + ratio * range)
+      })
+      .endAngle(() => {
+        const ratio = sumArrayTill(tickData, index + 1)
+        return deg2rad(config.minAngle + ratio * range)
+      })
   }
 
   return arc
 }
 
 function _configureTooltipLabels(config, segmentsColor) {
-  const { segmentLabels } = config;
+  const { segmentLabels } = config
   const label = (index) => {
-    if (typeof segmentLabels[index] === 'undefined' || segmentLabels[index] === null) return null;
-    let html = '<span style="display: flex; align-items: center; margin-top: 0.5px;">' +
-        '<span class="legend-color-guide" style="background-color: ' + segmentsColor[index] + '; width: 15px; height: 15px; border: 1px solid #999; display: inline-block; margin-right: 5px;"></span>' +
-        '<span class="key">' + segmentLabels[index] + '</span>' +
-        '</span>'
+    if (
+      typeof segmentLabels[index] === "undefined" ||
+      segmentLabels[index] === null
+    )
+      return null
+    let html =
+      '<span style="display: flex; align-items: center; margin-top: 0.5px;">' +
+      '<span class="legend-color-guide" style="background-color: ' +
+      segmentsColor[index] +
+      '; width: 15px; height: 15px; border: 1px solid #999; display: inline-block; margin-right: 5px;"></span>' +
+      '<span class="key">' +
+      segmentLabels[index] +
+      "</span>" +
+      "</span>"
 
     return html
   }

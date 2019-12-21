@@ -122,7 +122,7 @@ ReactSpeedometer.propTypes = {
   paddingSegment: PropTypes.bool,
   growSegmentOnHover: PropTypes.bool,
   segmentLabels: PropTypes.arrayOf(PropTypes.string),
-  positionLabel: PropTypes.oneOf(['outer', 'inner']),
+  positionLabel: PropTypes.oneOf(["outer", "inner"]),
   customSegmentLabels: PropTypes.arrayOf(PropTypes.string),
   title: PropTypes.string,
 }
