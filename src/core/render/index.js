@@ -190,13 +190,13 @@ function _renderLabels({config, svg, centerTx, r, toolTip}) {
 
   // расчет ширины для лейблов
   const labelRadius = Math.abs(
-      (config.positionLabel !== "inner" ? -(config.labelInset / 2) : (config.labelInset / 2)) - r
+      (config.positionLabel !== "inner" ? -(config.labelInset / 4) : (config.labelInset / 4)) - r
   )
 
   const maxWidth = config.positionLabel == "inner" ?
       Math.sqrt(Math.pow(r, 2) - Math.pow(labelRadius, 2)):
       Math.sqrt(Math.pow(labelRadius, 2) - Math.pow(r, 2));
-  
+
   const widths = angles.reduce((result, angle, index, angles) => {
     let currentAngle =
         index + 1 <= angles.length - 1
@@ -211,12 +211,12 @@ function _renderLabels({config, svg, centerTx, r, toolTip}) {
     const widthRight = labelRadius * Math.tan(currentAngle) * 0.9;
     return result.concat([
       [
-        widthLeft < maxWidth ? widthLeft : maxWidth,
-        widthRight < maxWidth ? widthRight: maxWidth,
+        widthLeft < maxWidth && config.positionLabel == "inner" ? widthLeft : maxWidth,
+        widthRight < maxWidth && config.positionLabel == "inner" ? widthRight: maxWidth,
       ],
     ])
   }, [])
-  // console.log(widths, labelRadius, r)
+
   const labels = []
   lg.selectAll("text")
       .data(ticks)
