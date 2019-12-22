@@ -453,8 +453,7 @@ function wrap(text, widths, positionLabel, svg) {
               throw new Error()
             }
             while (
-                tester.node().getBBox().width > widthRight + widthLeft && tester.text().length > 8
-                ) {
+                tester.node().getBBox().width > widthRight + widthLeft && tester.text().length) {
               breakingIndex = lineIndex
               const text = tester.text()
               tester.text(

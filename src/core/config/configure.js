@@ -69,7 +69,7 @@ function _configureArc(config) {
           config.ringWidth -
           (config.positionLabel == "inner" ? 0 : config.ringInset)
       )
-      .outerRadius(r - (config.positionLabel == "inner" ? 0 : config.ringInset))
+      .outerRadius(r - (config.positionLabel == "inner" ? 5 : config.ringInset))
       .startAngle((d, i) => {
         const ratio = sumArrayTill(tickData, index || i)
         return deg2rad(config.minAngle + ratio * range)
@@ -107,7 +107,7 @@ function _configureArcHover(config) {
           5
       )
       .outerRadius(
-        r - (config.positionLabel == "inner" ? 0 : config.ringInset) + 5
+        r - (config.positionLabel == "inner" ? 5 : config.ringInset) + 5
       )
       .startAngle(() => {
         const ratio = sumArrayTill(tickData, index)

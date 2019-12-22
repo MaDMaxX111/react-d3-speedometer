@@ -548,7 +548,7 @@ storiesOf("react-d3-speedometer", module)
             maxValue={200}
             growSegmentOnHover={true}
             customSegmentStops={[0, 200]}
-            customSegmentLabels={["L a b e l 1", "L abel 2"]}
+            customSegmentLabels={["wwwwww wwwwwwwwwwwwww wwwwwwwwwwwwwwwwwwwwwwwwwwww444444444444444444444444444x3333333333333333333", "wwwwww wwwwwwwwwwwwww wwwwwwwwwwwwwwwwwwwwwwwwwwww444444444444444444444444444x3333333333333333333"]}
             segmentLabels={[
               "L abel 1",
               "Label 2",
