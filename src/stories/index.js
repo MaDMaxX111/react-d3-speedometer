@@ -542,12 +542,13 @@ storiesOf("react-d3-speedometer", module)
         <div>
           <ReactSpeedometer
             positionLabel={"inner"}
-            value={500}
+            value={-500}
             width={300}
             height={300}
+            maxValue={200}
             growSegmentOnHover={true}
-            customSegmentStops={[0, 100, 200, 300, 400, 500, 750, 900, 1000]}
-            customSegmentLabels={["L a b e l 1", "Label 2"]}
+            customSegmentStops={[0, 200]}
+            customSegmentLabels={["L a b e l 1", "L abel 2"]}
             segmentLabels={[
               "L abel 1",
               "Label 2",

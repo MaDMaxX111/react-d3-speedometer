@@ -190,11 +190,12 @@ function _renderLabels({config, svg, centerTx, r, toolTip}) {
 
   // расчет ширины для лейблов
   const labelRadius = Math.abs(
-      (config.positionLabel === "inner" ? 0 : config.labelInset) - r
+      (config.positionLabel !== "inner" ? 0 : 2 * config.labelInset) - r
   )
+
   const widths = angles.reduce((result, angle, index, angles) => {
     let currentAngle =
-        index + 1 < angles.length - 1
+        index + 1 <= angles.length - 1
             ? angles[index + 1] - angle
             : angle + 10 - angle
     let previewAngle = index
@@ -202,10 +203,12 @@ function _renderLabels({config, svg, centerTx, r, toolTip}) {
         : Math.abs(angle - 10 - angle)
     currentAngle = ((currentAngle / 2) * 3.14) / 180
     previewAngle = ((previewAngle / 2) * 3.14) / 180
+    const widthLeft = labelRadius * Math.tan(previewAngle) * 0.9;
+    const widthRight = labelRadius * Math.tan(currentAngle) * 0.9;
     return result.concat([
       [
-        labelRadius * Math.tan(previewAngle) * 0.9,
-        labelRadius * Math.tan(currentAngle) * 0.9,
+        widthLeft < labelRadius ? widthLeft : labelRadius,
+        widthRight < labelRadius ? widthRight: labelRadius,
       ],
     ])
   }, [])
@@ -440,14 +443,12 @@ function wrap(text, widths, positionLabel, svg) {
 
       // проверяем по ширине
       const {width: widthTextContent} = text.node().getBBox()
-      console.log(widthTextContent, widthRight + widthLeft)
       if (widthTextContent > widthRight + widthLeft) {
         breakingIndex = null;
         try {
           text.selectAll("tspan").each(function (el, lineIndex) {
             const tspan = d3Select(this)
             tester.text(tspan.text());
-            console.log(tspan.text(), tester.node().getComputedTextLength(), widthRight + widthLeft)
             if (breakingIndex) {
               throw new Error()
             }
