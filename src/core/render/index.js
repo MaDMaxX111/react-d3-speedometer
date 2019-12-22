@@ -193,6 +193,10 @@ function _renderLabels({config, svg, centerTx, r, toolTip}) {
       (config.positionLabel !== "inner" ? 0 : 2 * config.labelInset) - r
   )
 
+  const maxWidth = config.positionLabel == "inner" ?
+      Math.sqrt(Math.pow(r, 2) - Math.pow(labelRadius, 2)):
+      Math.sqrt(Math.pow(labelRadius, 2) - Math.pow(r, 2));
+
   const widths = angles.reduce((result, angle, index, angles) => {
     let currentAngle =
         index + 1 <= angles.length - 1
@@ -207,8 +211,8 @@ function _renderLabels({config, svg, centerTx, r, toolTip}) {
     const widthRight = labelRadius * Math.tan(currentAngle);
     return result.concat([
       [
-        widthLeft < labelRadius * 0.7 ? widthLeft : labelRadius * 0.7,
-        widthRight < labelRadius * 0.7 ? widthRight: labelRadius * 0.7,
+        widthLeft < maxWidth ? widthLeft : maxWidth,
+        widthRight < maxWidth ? widthRight: maxWidth,
       ],
     ])
   }, [])
