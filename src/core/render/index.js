@@ -435,31 +435,34 @@ function wrap(text, widths, positionLabel) {
 
     // проверяем по ширине
     const { width: widthTextContent } = text.node().getBBox()
-    // let breakingIndex = null;
+    console.log(widthTextContent, widthRight + widthLeft)
     if (widthTextContent > widthRight + widthLeft) {
+      // breakingIndex = null;
       try {
         text.selectAll("tspan").each(function(el, lineIndex) {
           const tspan = d3Select(this)
-          if (breakingIndex) {
-            throw new Error()
-          }
-          while (
-            tspan.node().getBBox().width > widthRight + widthLeft &&
-            tspan.text().length > 8
-          ) {
-            breakingIndex = lineIndex
-            const text = tspan.text()
-            tspan.text(
-              text.substring(
-                0,
-                text[text.length - 5] == " " ? text.length - 5 : text.length - 4
-              ) + "..."
-            )
-          }
-
-          if (tspan.node().getBBox().width > widthRight + widthLeft) {
-            tspan.node().remove()
-          }
+    //       // debugger;
+          console.log(tspan.text(), tspan.node().getComputedTextLength(), widthRight + widthLeft)
+    //       if (breakingIndex) {
+    //         throw new Error()
+    //       }
+    //       while (
+    //         tspan.node().getBBox().width > widthRight + widthLeft &&
+    //         tspan.text().length > 8
+    //       ) {
+    //         breakingIndex = lineIndex
+    //         const text = tspan.text()
+    //         tspan.text(
+    //           text.substring(
+    //             0,
+    //             text[text.length - 5] == " " ? text.length - 5 : text.length - 4
+    //           ) + "..."
+    //         )
+    //       }
+    //
+    //       if (tspan.node().getBBox().width > widthRight + widthLeft) {
+    //         tspan.node().remove()
+    //       }
         })
       } catch (e) {}
     }
