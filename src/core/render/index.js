@@ -211,8 +211,8 @@ function _renderLabels({config, svg, centerTx, r, toolTip}) {
     const widthRight = labelRadius * Math.tan(currentAngle) * 0.9;
     return result.concat([
       [
-        widthLeft < maxWidth && config.positionLabel == "inner" ? widthLeft : maxWidth,
-        widthRight < maxWidth && config.positionLabel == "inner" ? widthRight: maxWidth,
+        widthLeft > maxWidth && config.positionLabel == "inner" ? maxWidth : widthLeft,
+        widthRight > maxWidth && config.positionLabel == "inner" ? maxWidth : widthRight,
       ],
     ])
   }, [])
