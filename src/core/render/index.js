@@ -190,7 +190,7 @@ function _renderLabels({config, svg, centerTx, r, toolTip}) {
 
   // расчет ширины для лейблов
   const labelRadius = Math.abs(
-      (config.positionLabel !== "inner" ? config.height / 2 : (config.labelInset / 4) -r)
+      (config.positionLabel !== "inner" ? (config.height / 2) : (config.labelInset / 4) -r)
   )
 
   const maxWidth = config.positionLabel == "inner" ?
