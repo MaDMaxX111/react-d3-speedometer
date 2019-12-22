@@ -585,7 +585,7 @@ storiesOf("react-d3-speedometer", module)
             customSegmentLabels={[
               "1wwwwwwwwwwwwwwwwww1 2wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww2",
               "Label2 Lab el2Label 2",
-              "Label 3",
+              "Label 33444353454647645645653453455535345",
               "Label 4",
               "Label 5",
               "Label 6",
