@@ -207,8 +207,8 @@ function _renderLabels({config, svg, centerTx, r, toolTip}) {
     const widthRight = labelRadius * Math.tan(currentAngle);
     return result.concat([
       [
-        widthLeft < labelRadius * 0.9 ? widthLeft : labelRadius * 0.9,
-        widthRight < labelRadius * 0.9 ? widthRight: labelRadius * 0.9,
+        widthLeft < labelRadius * 0.85 ? widthLeft : labelRadius * 0.85,
+        widthRight < labelRadius * 0.85 ? widthRight: labelRadius * 0.85,
       ],
     ])
   }, [])
