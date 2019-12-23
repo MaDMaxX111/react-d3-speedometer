@@ -192,7 +192,7 @@ function _renderLabels({config, svg, centerTx, r, toolTip}) {
   const labelRadius = Math.abs(
       (config.positionLabel !== "inner" ? ((config.width / 2) + config.labelInset) : (config.labelInset / 4) -r)
   )
-console.log(labelRadius);
+
   const maxWidth = config.positionLabel == "inner" ?
       Math.sqrt(Math.pow(r, 2) - Math.pow(labelRadius, 2)):
       Math.sqrt(Math.pow(labelRadius, 2) - Math.pow(r, 2));
