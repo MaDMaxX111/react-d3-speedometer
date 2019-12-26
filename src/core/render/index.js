@@ -190,7 +190,7 @@ function _renderLabels({config, svg, centerTx, r, toolTip}) {
 
   // расчет ширины для лейблов
   const labelRadius = Math.abs(
-      (config.positionLabel !== "inner" ? ((config.width / 2) + config.labelInset) : (config.labelInset / 4) -r)
+      (config.positionLabel !== "inner" ? ((config.width / 2) + config.labelInset) : (config.labelInset / 4) - r)
   )
 
   const maxWidth = config.positionLabel == "inner" ?
@@ -207,8 +207,8 @@ function _renderLabels({config, svg, centerTx, r, toolTip}) {
         : Math.abs(angle - 10 - angle)
     currentAngle = ((currentAngle / 2) * 3.14) / 180
     previewAngle = ((previewAngle / 2) * 3.14) / 180
-    const widthLeft = labelRadius * Math.tan(previewAngle) * 0.9;
-    const widthRight = labelRadius * Math.tan(currentAngle) * 0.9;
+    const widthLeft = r * Math.tan(previewAngle) * 0.9;
+    const widthRight = r * Math.tan(currentAngle) * 0.9;
     return result.concat([
       [
         widthLeft < maxWidth ? widthLeft : maxWidth,
