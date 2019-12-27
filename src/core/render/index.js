@@ -207,8 +207,8 @@ function _renderLabels({config, svg, centerTx, r, toolTip}) {
         : Math.abs(angle - 10 - angle)
     currentAngle = ((currentAngle / 2) * 3.14) / 180
     previewAngle = ((previewAngle / 2) * 3.14) / 180
-    const widthLeft = r * Math.tan(previewAngle) * 0.9;
-    const widthRight = r * Math.tan(currentAngle) * 0.9;
+    const widthLeft = r * Math.tan(previewAngle) * 0.8;
+    const widthRight = r * Math.tan(currentAngle) * 0.8;
     return result.concat([
       [
         widthLeft < maxWidth ? widthLeft : maxWidth,

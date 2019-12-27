@@ -541,13 +541,13 @@ storiesOf("react-d3-speedometer", module)
       <div>
         <div>
           <ReactSpeedometer
-            positionLabel={"inner"}
+            positionLabel={"outer"}
             value={-500}
             width={400}
             height={400}
-            maxValue={200}
+            maxValue={18}
             growSegmentOnHover={true}
-            customSegmentStops={[0, 200]}
+            customSegmentStops={[0, 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18]}
             customSegmentLabels={["wwwwww wwwwwwww", "wwwwww wwwwwwwwwwwwww wwwwwwwwwwwwwwwwwwwwwwwwwwww444444444444444444444444444x3333333333333333333"]}
             segmentLabels={[
               "L abel 1",
