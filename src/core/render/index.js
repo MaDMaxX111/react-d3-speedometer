@@ -207,8 +207,8 @@ function _renderLabels({config, svg, centerTx, r, toolTip}) {
         : Math.abs(angle - 10 - angle)
     currentAngle = ((currentAngle / 2) * 3.14) / 180
     previewAngle = ((previewAngle / 2) * 3.14) / 180
-    const widthLeft = r * Math.tan(previewAngle) * 0.8;
-    const widthRight = r * Math.tan(currentAngle) * 0.8;
+    const widthLeft = r * Math.tan(previewAngle) * 0.7;
+    const widthRight = r * Math.tan(currentAngle) * 0.7;
     return result.concat([
       [
         widthLeft < maxWidth ? widthLeft : maxWidth,
@@ -480,10 +480,10 @@ function wrap(text, widths, positionLabel, svg, labels_array, labels) {
 
       let biasX = 0
       if (contentLenghtCenter > widthRight) {
-        biasX = widthRight - contentLenghtCenter
+        biasX = widthRight - contentLenghtCenter - 4
       }
       if (contentLenghtCenter > widthLeft) {
-        biasX = contentLenghtCenter - widthLeft
+        biasX = contentLenghtCenter - widthLeft - 4
       }
       text
           .select("tspan")
