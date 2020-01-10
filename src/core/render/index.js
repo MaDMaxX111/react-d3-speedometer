@@ -218,6 +218,7 @@ function _renderLabels({config, svg, centerTx, r, toolTip}) {
   }, [])
 
   const labels = []
+  const labels_array = []
   lg.selectAll("text")
       .data(ticks)
       .enter()
@@ -228,10 +229,10 @@ function _renderLabels({config, svg, centerTx, r, toolTip}) {
       })
       .text((d, i) => {
         if (customSegmentLabels && customSegmentLabels[i] !== null) {
-          labels.push(customSegmentLabels[i])
+          labels_array.push(customSegmentLabels[i])
           return customSegmentLabels[i]
         }
-        labels.push(config.labelFormat(d))
+        labels_array.push(config.labelFormat(d))
         return config.labelFormat(d)
       })
       .attr("class", "segment-value")
@@ -240,7 +241,7 @@ function _renderLabels({config, svg, centerTx, r, toolTip}) {
       .style("font-weight", "bold")
       .style("fill", config.textColor)
       .style("cursor", "pointer")
-      .call(wrap, widths, config.positionLabel, svg)
+      .call(wrap, widths, config.positionLabel, svg, labels_array, labels)
 
   const onShowTooltip = showTooltip(toolTip)
   const onHideTooltip = hideTooltip(toolTip)
@@ -248,6 +249,7 @@ function _renderLabels({config, svg, centerTx, r, toolTip}) {
 
   const onMouseenter = (d, i, groups) => {
     const el = d3Select(groups[i])
+
     el.classed("hover", true)
     el.transition()
         .duration(70)
@@ -374,7 +376,7 @@ function _renderTitleText({config, svg}) {
       : null
 }
 
-function wrap(text, widths, positionLabel, svg) {
+function wrap(text, widths, positionLabel, svg, labels_array, labels) {
   // вставляем тестер
   let tester = svg
       .append("text")
@@ -488,6 +490,7 @@ function wrap(text, widths, positionLabel, svg) {
           .attr("dy", (positionLabel == "inner" ? -0.5 : -(lineNumber - 1)) + "em")
       // смещение от центра
       text.selectAll("tspan").attr("x", parseInt(biasX, 10))
+      labels.push(labels_array[index]);
     } else {
       d3Select(this).remove();
     }
