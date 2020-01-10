@@ -541,27 +541,21 @@ storiesOf("react-d3-speedometer", module)
       <div>
         <div>
           <ReactSpeedometer
-            positionLabel={"outer"}
-            value={-500}
-            width={400}
-            height={400}
-            maxValue={18}
-            growSegmentOnHover={true}
-            customSegmentStops={[0, 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18]}
-            customSegmentLabels={["wwwwww wwwwwwww", "wwwwww wwwwwwwwwwwwww wwwwwwwwwwwwwwwwwwwwwwwwwwww444444444444444444444444444x3333333333333333333"]}
-            segmentLabels={[
-              "L abel 1",
-              "Label 2",
-              "Label 3",
-              "Label 4",
-              "Label 5",
-              "Label 6",
-              "Label 7",
-              "Label 8",
-            ]}
-            paddingSegment={true}
-            segmentColors={["#FF9933", "#ECEFF4", "#138808"]}
-            needleColor="#000080"
+              positionLabel={'outer'}
+              segmentLabels={['Сызрань',null,"Сертолово",null,null,null,null,null,null,null]}
+              title={""}
+              currentValueText={""}
+              customSegmentLabels = {["Сызрань слева","СЫзрань справа",'',"Сертолово Справа",null,null,null,null,null,null,null]}
+              customSegmentStops = {[-20,-10,-5,-2.5,-2.3,-1.8,-1,0,5,10.5,12.7]}
+              growSegmentOnHover = {true}
+              maxValue = {12.7}
+              minValue = {-20}
+              segmentColors = {["rgba(0, 209, 193, 1)","rgba(255,255,255,1)","rgba(255, 90, 95, 1)","rgba(255,255,255,1)","rgba(255, 180, 0, 1)","rgba(255,255,255,1)","rgba(0, 122, 135, 1)","rgba(180, 167, 108, 1)","rgba(255,255,255,1)","rgba(140, 224, 113, 1)"]}
+              paddingSegment = {true}
+              width={800}
+              height={600}
+              valueFormat={'.1s'}
+              value={753664}
           />
           <ReactSpeedometer
             width={800}

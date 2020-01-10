@@ -227,7 +227,7 @@ function _renderLabels({config, svg, centerTx, r, toolTip}) {
         r})`
       })
       .text((d, i) => {
-        if (customSegmentLabels && customSegmentLabels[i]) {
+        if (customSegmentLabels && customSegmentLabels[i] !== null) {
           labels.push(customSegmentLabels[i])
           return customSegmentLabels[i]
         }
